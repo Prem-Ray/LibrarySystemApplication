@@ -43,7 +43,11 @@ public class AuthorService {
         }
         String name = authorDTO.getName();
         String email = authorDTO.getEmail();
-        Author createdAuthor = authorRepository.saveAuthor(name, email);
+        authorRepository.saveAuthor(name, email);
+        Author createdAuthor = authorRepository.findAuthorByName(name);
+        if (createdAuthor == null) {
+            throw new RuntimeException("Failed to retrieve created author");
+        }
         return modelMapper.map(createdAuthor, AuthorDTO.class);
     }
 
@@ -54,7 +58,11 @@ public class AuthorService {
         }
         String name = authorDTO.getName();
         String email = authorDTO.getEmail();
-        Author updatedAuthor = authorRepository.updateAuthor(id, name, email);
+        authorRepository.updateAuthor(id, name, email);
+        Author updatedAuthor = authorRepository.findAuthorById(id);
+        if (updatedAuthor == null) {
+            throw new RuntimeException("Failed to retrieve updated author");
+        }
         return modelMapper.map(updatedAuthor, AuthorDTO.class);
     }
 

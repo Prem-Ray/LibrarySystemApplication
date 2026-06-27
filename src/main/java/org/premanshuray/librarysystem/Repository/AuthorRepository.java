@@ -20,12 +20,12 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     @Modifying
     @Transactional
     @Query("insert into Author(name,email) values(:name,:email)")
-    Author saveAuthor(@Param("name") String name, @Param("email") String email);
+    void saveAuthor(@Param("name") String name, @Param("email") String email);
 
     @Modifying
     @Transactional
     @Query("update Author a set a.name=:name, a.email=:email where a.id=:id")
-    Author updateAuthor(@Param("id") Long id, @Param("name")String name, @Param("email")String email);
+    void updateAuthor(@Param("id") Long id, @Param("name")String name, @Param("email")String email);
 
     @Modifying
     @Transactional

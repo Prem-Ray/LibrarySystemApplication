@@ -38,7 +38,12 @@ public class BookService {
         String name = bookDTO.getName();
         LocalDate publishedDate = bookDTO.getPublishedDate();
         Long authorId = bookDTO.getAuthorId();
-        Book publishedBook = bookRepository.createBook(name, publishedDate, authorId);
+        bookRepository.createBook(name, publishedDate, authorId);
+        List<Book> books = bookRepository.findAllBooks();
+        Book publishedBook = books.stream()
+                .filter(b -> b.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve created book"));
         return modelMapper.map(publishedBook, BookDTO.class);
     }
 
@@ -52,7 +57,11 @@ public class BookService {
         String name = bookDTO.getName();
         LocalDate publishedDate = bookDTO.getPublishedDate();
         Long authorId = bookDTO.getAuthorId();
-        Book updatedBook = bookRepository.updateBook(id, name, publishedDate, authorId);
+        bookRepository.updateBook(id, name, publishedDate, authorId);
+        Book updatedBook = bookRepository.findByID(id);
+        if (updatedBook == null) {
+            throw new RuntimeException("Failed to retrieve updated book");
+        }
         return modelMapper.map(updatedBook, BookDTO.class);
     }
 

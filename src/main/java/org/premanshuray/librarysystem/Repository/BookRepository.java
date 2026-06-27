@@ -34,10 +34,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Modifying
     @Transactional
     @Query("insert into Book(name, publishedDate, author) values(:name, :publishedDate, (select a from Author a where a.id = :authorId))")
-    Book createBook(String name, LocalDate publishedDate, Long authorId);
+    void createBook(String name, LocalDate publishedDate, Long authorId);
 
     @Modifying
     @Transactional
     @Query("update Book b set b.name=:name, b.publishedDate=:publishedDate, b.author=(select a from Author a where a.id = :authorId) where b.id=:id")
-    Book updateBook(Long id, String name, LocalDate publishedDate, Long authorId);
+    void updateBook(Long id, String name, LocalDate publishedDate, Long authorId);
 }
