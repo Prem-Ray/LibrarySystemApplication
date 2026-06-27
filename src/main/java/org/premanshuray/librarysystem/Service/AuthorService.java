@@ -17,8 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthorService {
 
-    public final AuthorRepository authorRepository;
-    public final ModelMapper modelMapper;
+    private final AuthorRepository authorRepository;
+    private final ModelMapper modelMapper;
 
     public List<AuthorDTO> getAllAuthors() {
         return authorRepository.findAllAuthors()

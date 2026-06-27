@@ -1,8 +1,6 @@
 package org.premanshuray.librarysystem.Controller;
 
 import org.premanshuray.librarysystem.DTO.BookDTO;
-import org.premanshuray.librarysystem.Entity.Book;
-import org.premanshuray.librarysystem.Service.AuthorService;
 import org.premanshuray.librarysystem.Service.BookService;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +48,7 @@ public class BookController {
     }
 
     @GetMapping("/after-date")
-    public List<BookDTO>findBooksAfterCertainData(@RequestParam LocalDate date){
+    public List<BookDTO>findBooksAfterCertainDate(@RequestParam LocalDate date){
         return bookService.findBooksAfterCertainDate(date);
     }
 

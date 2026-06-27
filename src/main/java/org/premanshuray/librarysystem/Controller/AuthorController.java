@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/authors")
 public class AuthorController {
 
-    public final AuthorService authorService;
+    private final AuthorService authorService;
 
 
     public AuthorController(AuthorService authorService) {
