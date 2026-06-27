@@ -1,8 +1,11 @@
 package org.premanshuray.librarysystem.Controller;
 
+import jakarta.validation.Valid;
 import org.premanshuray.librarysystem.DTO.AuthorDTO;
 import org.premanshuray.librarysystem.DTO.BookDTO;
 import org.premanshuray.librarysystem.Service.AuthorService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,44 +16,43 @@ public class AuthorController {
 
     private final AuthorService authorService;
 
-
     public AuthorController(AuthorService authorService) {
         this.authorService = authorService;
     }
 
     @GetMapping
-    public List<AuthorDTO> getAllAuthors(){
-        return authorService.getAllAuthors();
+    public ResponseEntity<List<AuthorDTO>> getAllAuthors() {
+        return ResponseEntity.ok(authorService.getAllAuthors());
     }
 
     @PostMapping
-    public AuthorDTO createAuthor(@RequestBody AuthorDTO authorDTO){
-        return authorService.createAuthor(authorDTO);
+    public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody AuthorDTO authorDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authorService.createAuthor(authorDTO));
     }
 
     @PutMapping("/{id}")
-    public AuthorDTO updateAuthor(@PathVariable Long id,@RequestBody AuthorDTO authorDTO){
-        return authorService.updateAuthor(id,authorDTO);
+    public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorDTO authorDTO) {
+        return ResponseEntity.ok(authorService.updateAuthor(id, authorDTO));
     }
 
     @DeleteMapping("/{id}")
-    public String deleteAuthor(@PathVariable Long id){
-        return authorService.deleteAuthor(id);
+    public ResponseEntity<String> deleteAuthor(@PathVariable Long id) {
+        return ResponseEntity.ok(authorService.deleteAuthor(id));
     }
 
     @GetMapping("/{id}")
-    public AuthorDTO findAuthorById(@PathVariable Long id){
-        return authorService.findAuthorById(id);
+    public ResponseEntity<AuthorDTO> findAuthorById(@PathVariable Long id) {
+        return ResponseEntity.ok(authorService.findAuthorById(id));
     }
 
     @GetMapping("/name/{name}")
-    public AuthorDTO findAuthorByName(@PathVariable String name){
-        return authorService.findAuthorByName(name);
+    public ResponseEntity<AuthorDTO> findAuthorByName(@PathVariable String name) {
+        return ResponseEntity.ok(authorService.findAuthorByName(name));
     }
 
     @GetMapping("/{id}/books")
-    public List<BookDTO> findBooksByAuthorId(@PathVariable Long id){
-        return authorService.findBooksByAuthorId(id);
+    public ResponseEntity<List<BookDTO>> findBooksByAuthorId(@PathVariable Long id) {
+        return ResponseEntity.ok(authorService.findBooksByAuthorId(id));
     }
 
 }

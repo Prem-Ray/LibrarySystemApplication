@@ -19,7 +19,6 @@ public class BookService {
     private final ModelMapper modelMapper;
 
     public List<BookDTO> getAllBooks() {
-
         return bookRepository.findAllBooks()
                 .stream()
                 .map(book -> modelMapper.map(book, BookDTO.class))
@@ -27,42 +26,71 @@ public class BookService {
     }
 
     public BookDTO createBook(BookDTO bookDTO) {
-        String name=bookDTO.getName();
+        if (bookDTO == null) {
+            throw new IllegalArgumentException("BookDTO cannot be null");
+        }
+        if (bookDTO.getName() == null || bookDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Book name cannot be null or empty");
+        }
+        if (bookDTO.getAuthorId() == null) {
+            throw new IllegalArgumentException("Author ID cannot be null");
+        }
+        String name = bookDTO.getName();
         LocalDate publishedDate = bookDTO.getPublishedDate();
         Long authorId = bookDTO.getAuthorId();
-        Book publishedBook = bookRepository.createBook(name,publishedDate,authorId);
-        return modelMapper.map(publishedBook,BookDTO.class);
+        Book publishedBook = bookRepository.createBook(name, publishedDate, authorId);
+        return modelMapper.map(publishedBook, BookDTO.class);
     }
 
     public BookDTO updateBook(Long id, BookDTO bookDTO) {
-        String name=bookDTO.getName();
+        if (!isIdExist(id)) {
+            throw new EntityNotFoundException("Book with id " + id + " not found");
+        }
+        if (bookDTO == null) {
+            throw new IllegalArgumentException("BookDTO cannot be null");
+        }
+        String name = bookDTO.getName();
         LocalDate publishedDate = bookDTO.getPublishedDate();
         Long authorId = bookDTO.getAuthorId();
-        Book updatedBook = bookRepository.updateBook(id,name,publishedDate,authorId);
-        return modelMapper.map(updatedBook,BookDTO.class);
+        Book updatedBook = bookRepository.updateBook(id, name, publishedDate, authorId);
+        return modelMapper.map(updatedBook, BookDTO.class);
     }
 
     public String deleteBook(Long id) {
-        if(!isIdExist(id)){
+        if (!isIdExist(id)) {
             throw new EntityNotFoundException("Book with id " + id + " not found");
         }
         bookRepository.deleteByID(id);
         return "Book with " + id + " deleted successfully";
     }
 
-
     public BookDTO findBookById(Long id) {
+        if (!isIdExist(id)) {
+            throw new EntityNotFoundException("Book with id " + id + " not found");
+        }
         Book bookEntity = bookRepository.findByID(id);
-        return modelMapper.map(bookEntity,BookDTO.class);
+        if (bookEntity == null) {
+            throw new EntityNotFoundException("Book with id " + id + " not found");
+        }
+        return modelMapper.map(bookEntity, BookDTO.class);
     }
 
     public BookDTO findBookByTitle(String title) {
+        if (title == null || title.isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be null or empty");
+        }
         Book book = bookRepository.findBookByTitle(title);
-        return modelMapper.map(book,BookDTO.class);
+        if (book == null) {
+            throw new EntityNotFoundException("Book with title '" + title + "' not found");
+        }
+        return modelMapper.map(book, BookDTO.class);
     }
 
     public List<BookDTO> findBooksAfterCertainDate(LocalDate date) {
-        List<Book>books = bookRepository.findByPublishedDateAfter(date);
+        if (date == null) {
+            throw new IllegalArgumentException("Date cannot be null");
+        }
+        List<Book> books = bookRepository.findByPublishedDateAfter(date);
         return books.stream()
                 .map(book -> modelMapper.map(book, BookDTO.class))
                 .toList();
